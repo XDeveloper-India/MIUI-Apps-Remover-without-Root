@@ -6,12 +6,17 @@
 #Region INCLUDE
 #include <AVIConstants.au3>
 #include <GuiConstantsEx.au3>
+#include <StaticConstants.au3>
 #include <TreeViewConstants.au3>
 #include <GDIPlus.au3>
 #include <MsgBoxConstants.au3>
 #include <Array.au3>
 #include <WinAPIFiles.au3>
 #include <FileConstants.au3>
+#include <WindowsConstants.au3>
+#include <EditConstants.au3>
+#include <ProgressConstants.au3>
+
 #EndRegion INCLUDE
 
 #Region GUI
@@ -19,27 +24,20 @@ Local $gui = GUICreate("MIUI Apps Remover", 500, 500)
 GUISetIcon(@SystemDir & "\mspaint.exe", 0)
 #EndRegion GUI
 
-#Region MENU
-Local $idMenu1 = GUICtrlCreateMenu("Menu &One")
-Local $idMenu2 = GUICtrlCreateMenu("Menu &Two")
-GUICtrlCreateMenu("Menu Th&ree")
-GUICtrlCreateMenu("Menu &Four")
-GUICtrlCreateMenuItem('SubMenu One &A', $idMenu1)
-GUICtrlCreateMenuItem('SubMenu One &B', $idMenu1)
-#EndRegion MENU
 
-
-GUICtrlCreatePic("logo.jpg", 0, 0, 206, 68)
+GUICtrlCreatePic("logo.jpg", 21, 20, 206, 68)
 GUICtrlSetTip(-1, '#Region PIC')
 GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
 GUICtrlSetColor(-1, 0xFFFFFF)
 #EndRegion PIC
 
+GUICtrlCreateLabel("Please enable USB Debugging in your device.", 100, 120)
 
-#Region EDIT
-GUICtrlCreateEdit(@CRLF & "  Sample Edit Control", 10, 110, 150, 70)
-GUICtrlSetTip(-1, '#Region EDIT')
-#EndRegion EDIT
+#Region BUTTON
+Local $idCTRL_EdtScreen = GUICtrlCreateEdit("Please select ADB folder.",10,145,365,30, BitOR($ES_READONLY, $ES_CENTER), $WS_EX_STATICEDGE)
+Local $iFileSelectButton = GUICtrlCreateButton("Select Folder", 380, 145, 100, 30)
+GUICtrlSetTip($iFileSelectButton, 'Select ADB path')
+#EndRegion BUTTON
 
 GUICtrlCreateGroup("Apps",5, 185, 485, 240)
 
@@ -115,27 +113,33 @@ GUICtrlSetTip($imail,"com.android.email");
 Local $iGoogleKeyboard= GUICtrlCreateCheckbox("Google Keyboard",285,400);
 GUICtrlSetTip($iGoogleKeyboard,"com.google.android.inputmethod.latin");
 
-
+#Region BUTTON
+GUICtrlCreateGroup("Extras", 250, 0, 100, 110)
+Local $downloadUSBDriver = GUICtrlCreateButton("USB Driver", 255, 20, 90, 20)
+Local $downloadADB = GUICtrlCreateButton("ADB", 255, 40, 90, 20)
+Local $help = GUICtrlCreateButton("Help", 255, 60, 90, 20)
+Local $about = GUICtrlCreateButton("About", 255, 80, 90, 20)
+#EndRegion BUTTON
 
 
 
 
 #Region GROUP WITH RADIO BUTTONS
 GUICtrlCreateGroup("Action", 350, 0, 140, 110)
-GUICtrlCreateRadio("Install", 370, 20, 100)
-GUICtrlSetTip(-1, '#Action Install selected apps')
-GUICtrlSetState(-1, $GUI_CHECKED)
-GUICtrlCreateRadio("Uninstall", 370, 40, 100)
-GUICtrlSetTip(-1, '#Action Uninstall selected apps')
-GUICtrlCreateRadio("Enable", 370, 60, 100)
-GUICtrlSetTip(-1, '#Action Enable selected apps')
-GUICtrlCreateRadio("Disable", 370, 80, 100)
-GUICtrlSetTip(-1, '#Action Disable selected apps')
+Local $install = GUICtrlCreateRadio("Install", 370, 20, 100)
+GUICtrlSetTip($install, '#Action Install selected apps')
+Local $uninstall = GUICtrlCreateRadio("Uninstall", 370, 40, 100)
+GUICtrlSetState($uninstall, $GUI_CHECKED)
+GUICtrlSetTip($uninstall, '#Action Uninstall selected apps')
+Local $enable = GUICtrlCreateRadio("Enable", 370, 60, 100)
+GUICtrlSetTip($enable, '#Action Enable selected apps')
+Local $disable = GUICtrlCreateRadio("Disable", 370, 80, 100)
+GUICtrlSetTip($disable, '#Action Disable selected apps')
 #EndRegion GROUP WITH RADIO BUTTONS
 
 
 #Region PROGRESS
-Local $iProgress = GUICtrlCreateProgress(60, 435, 310, 20)
+Local $iProgress = GUICtrlCreateProgress(60, 435, 310, 20,$PBS_MARQUEE)
 GUICtrlSetTip(-1, 'Action Progress')
 GUICtrlSetData(-1, 60)
 GUICtrlCreateLabel("Progress:", 5, 435)
@@ -362,6 +366,8 @@ EndIf
 	Next
     ;RunWait("script.bat")
 	FileClose($hFileOpen)
+ Case $iFileSelectButton
+	selectFolder()
     Case $GUI_EVENT_CLOSE
 			ExitLoop
 
@@ -371,6 +377,24 @@ EndIf
  Func _IsChecked($idControlID)
     Return BitAND(GUICtrlRead($idControlID), $GUI_CHECKED) = $GUI_CHECKED
 EndFunc   ;==>_IsChecked
+
+
+Func selectFolder()
+    ; Create a constant variable in Local scope of the message to display in FileSelectFolder.
+    Local Const $sMessage = "Select a ADB folder"
+    ; Display an open dialog to select a file.
+    Local $sFileSelectFolder = FileSelectFolder($sMessage, "")
+    If @error Then
+        GUICtrlSetData($idCTRL_EdtScreen,"No folder was selected.")
+    Else
+        ; Display the selected folder.
+		    GUICtrlSetData($idCTRL_EdtScreen,$sFileSelectFolder)
+
+
+    EndIf
+ EndFunc   ;==>Example
+
+
 
 GUIDelete()
 #EndRegion GUI MESSAGE LOOP
