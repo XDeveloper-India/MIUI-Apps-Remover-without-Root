@@ -24,11 +24,9 @@ Local $gui = GUICreate("MIUI Apps Remover", 500, 500)
 GUISetIcon(@SystemDir & "\mspaint.exe", 0)
 #EndRegion GUI
 
-
+GUICtrlCreateLabel ( "XDEVELOPER", 21, 10, 206,68 ,$SS_CENTER)
 GUICtrlCreatePic("logo.jpg", 21, 20, 206, 68)
 GUICtrlSetTip(-1, '#Region PIC')
-GUICtrlSetBkColor(-1, $GUI_BKCOLOR_TRANSPARENT)
-GUICtrlSetColor(-1, 0xFFFFFF)
 #EndRegion PIC
 
 GUICtrlCreateLabel("Please enable USB Debugging in your device.", 100, 120)
@@ -118,7 +116,6 @@ GUICtrlCreateGroup("Extras", 250, 0, 100, 110)
 Local $downloadUSBDriver = GUICtrlCreateButton("USB Driver", 255, 20, 90, 20)
 Local $downloadADB = GUICtrlCreateButton("ADB", 255, 40, 90, 20)
 Local $help = GUICtrlCreateButton("Help", 255, 60, 90, 20)
-Local $about = GUICtrlCreateButton("About", 255, 80, 90, 20)
 #EndRegion BUTTON
 
 
@@ -131,17 +128,12 @@ GUICtrlSetTip($install, '#Action Install selected apps')
 Local $uninstall = GUICtrlCreateRadio("Uninstall", 370, 40, 100)
 GUICtrlSetState($uninstall, $GUI_CHECKED)
 GUICtrlSetTip($uninstall, '#Action Uninstall selected apps')
-Local $enable = GUICtrlCreateRadio("Enable", 370, 60, 100)
-GUICtrlSetTip($enable, '#Action Enable selected apps')
-Local $disable = GUICtrlCreateRadio("Disable", 370, 80, 100)
-GUICtrlSetTip($disable, '#Action Disable selected apps')
 #EndRegion GROUP WITH RADIO BUTTONS
 
 
 #Region PROGRESS
-Local $iProgress = GUICtrlCreateProgress(60, 435, 310, 20,$PBS_MARQUEE)
-GUICtrlSetTip(-1, 'Action Progress')
-GUICtrlSetData(-1, 60)
+Local $iProgress = GUICtrlCreateProgress(60, 435, 310, 20)
+GUICtrlSetTip($iProgress, 'Action Progress')
 GUICtrlCreateLabel("Progress:", 5, 435)
 #EndRegion PROGRESS
 
@@ -152,6 +144,7 @@ GUICtrlSetTip(-1, '#Region BUTTON')
 
 Local $packageIds[33] = ["com.android.browser","com.google.android.apps.docs","com.google.android.apps.maps","com.miui.screenrecorder","com.miui.videoplayer","com.xiaomi.midrop","com.xiaomi.mipicks","com.xiaomi.scanner","com.google.android.apps.photos","com.google.android.apps.tachyon","com.google.android.googlequicksearchbox","com.android.calendar","com.facebook.appmanager","com.facebook.services","com.facebook.system","com.google.android.inputmethod.latin","com.google.android.music","com.google.android.videos","com.google.android.youtube","com.mi.android.globalFileexplorer","com.miui.analytics","com.miui.bugreport","com.miui.calculator","com.miui.compass","com.miui.msa.global","com.miui.notes","com.miui.player","com.miui.fm","com.miui.huanji","com.mfashiongallery.emag","com.miui.personalassistant","com.android.email","com.google.android.inputmethod.latin"];
 Local $processPackage[33];
+Local $command = ""
 
 #Region GUI MESSAGE LOOP
 GUISetState(@SW_SHOW)
@@ -356,22 +349,36 @@ Else
    $processPackage[32]=False
 EndIf
     Case $iExecuteButton
-	   $handle = _WinAPI_CreateFile("apps.txt",1)
-	   _WinAPI_CloseHandle($handle)
-	  $hFileOpen = FileOpen("apps.txt",$FO_OVERWRITE)
     For $i = 0 To UBound($processPackage) - 1
      If $processPackage[$i] Then
-		FileWriteLine($hFileOpen, $packageIds[$i])
+		RunWait("adb shell pm " & $command & " -k --user 0 " & $i )
+     GUICtrlSetData($iProgress, $i)
      EndIf
+
 	Next
-    ;RunWait("script.bat")
-	FileClose($hFileOpen)
+	GUICtrlSetData($iProgress, 100)
+	MsgBox($MB_SYSTEMMODAL, 'Completed',"Process Completed!")
  Case $iFileSelectButton
 	selectFolder()
+
+ Case $install
+	if BitAND(GUICtrlRead($install), $GUI_CHECKED) = $GUI_CHECKED then
+                $command = "install"
+    EndIf
+ Case $uninstall
+	if BitAND(GUICtrlRead($uninstall), $GUI_CHECKED) = $GUI_CHECKED then
+    	$command = "uninstall"
+    EndIf
     Case $GUI_EVENT_CLOSE
 			ExitLoop
-
+    Case $downloadUSBDriver
+    ShellExecute("http://bigota.d.miui.com/tools/xiaomi_usb_driver.rar", "", "", "open")
+	Case $downloadADB
+    ShellExecute("https://dl.google.com/android/repository/commandlinetools-win-6609375_latest.zip", "", "", "open")
+	Case $help
+    ShellExecute("https://github.com/XDeveloper-India/MIUI-Apps-Remover-without-Root", "", "", "open")
 	EndSwitch
+
  WEnd
 
  Func _IsChecked($idControlID)
@@ -389,7 +396,6 @@ Func selectFolder()
     Else
         ; Display the selected folder.
 		    GUICtrlSetData($idCTRL_EdtScreen,$sFileSelectFolder)
-
 
     EndIf
  EndFunc   ;==>Example
