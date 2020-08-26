@@ -2,7 +2,7 @@
 A small Windows Utility to remove stupid MIUI apps from Xiaomi device without root permission.
 
 WARNING: you should not uninstall or disable “Xiaomi Find Device” com.xiaomi.finddevice.
-On next reboot your phone will enter endless loop, and after some time it will ask to erase device and start over. Guess how I learned that?
+On next reboot your phone will enter endless loop, and after some time it will ask to erase device and start over
 
 prerequisite:
 1. USB Debugging:
