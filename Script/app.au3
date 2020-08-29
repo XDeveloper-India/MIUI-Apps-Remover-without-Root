@@ -24,7 +24,6 @@ Local $gui = GUICreate("MIUI Apps Remover", 500, 500)
 GUISetIcon(@SystemDir & "\mspaint.exe", 0)
 #EndRegion GUI
 
-GUICtrlCreateLabel ( "XDEVELOPER", 21, 10, 206,68 ,$SS_CENTER)
 GUICtrlCreatePic("logo.jpg", 21, 20, 206, 68)
 GUICtrlSetTip(-1, '#Region PIC')
 #EndRegion PIC
@@ -85,7 +84,7 @@ GUICtrlSetTip($iFileExplorer,"com.mi.android.globalFileexplorer");
 Local $iAnalytics= GUICtrlCreateCheckbox("Analytics",140,380);
 GUICtrlSetTip($iAnalytics,"com.miui.analytics");
 Local $iMiFeedback= GUICtrlCreateCheckbox("Mi Feedback",140,400);
-GUICtrlSetTip($iMiFeedback,"com.miui.bugreport");
+GUICtrlSetTip($iMiFeedback,"com.miui.miservice");
 
 #Region CheckBox column 3
 Local $iCalculator= GUICtrlCreateCheckbox("Calculator",285,200);
@@ -123,8 +122,8 @@ Local $help = GUICtrlCreateButton("Help", 255, 60, 90, 20)
 
 #Region GROUP WITH RADIO BUTTONS
 GUICtrlCreateGroup("Action", 350, 0, 140, 110)
-Local $install = GUICtrlCreateRadio("Install", 370, 20, 100)
-GUICtrlSetTip($install, '#Action Install selected apps')
+#Local $install = GUICtrlCreateRadio("Install", 370, 20, 100)
+#GUICtrlSetTip($install, '#Action Install selected apps')
 Local $uninstall = GUICtrlCreateRadio("Uninstall", 370, 40, 100)
 GUICtrlSetState($uninstall, $GUI_CHECKED)
 GUICtrlSetTip($uninstall, '#Action Uninstall selected apps')
@@ -142,9 +141,10 @@ Local $iExecuteButton = GUICtrlCreateButton("Execute", 380, 430, 100, 30)
 GUICtrlSetTip(-1, '#Region BUTTON')
 #EndRegion BUTTON
 
-Local $packageIds[33] = ["com.android.browser","com.google.android.apps.docs","com.google.android.apps.maps","com.miui.screenrecorder","com.miui.videoplayer","com.xiaomi.midrop","com.xiaomi.mipicks","com.xiaomi.scanner","com.google.android.apps.photos","com.google.android.apps.tachyon","com.google.android.googlequicksearchbox","com.android.calendar","com.facebook.appmanager","com.facebook.services","com.facebook.system","com.google.android.inputmethod.latin","com.google.android.music","com.google.android.videos","com.google.android.youtube","com.mi.android.globalFileexplorer","com.miui.analytics","com.miui.bugreport","com.miui.calculator","com.miui.compass","com.miui.msa.global","com.miui.notes","com.miui.player","com.miui.fm","com.miui.huanji","com.mfashiongallery.emag","com.miui.personalassistant","com.android.email","com.google.android.inputmethod.latin"];
+Local $packageIds[33] = ["com.android.browser","com.google.android.apps.docs","com.google.android.apps.maps","com.miui.screenrecorder","com.miui.videoplayer","com.xiaomi.midrop","com.xiaomi.mipicks","com.xiaomi.scanner","com.google.android.apps.photos","com.google.android.apps.tachyon","com.google.android.googlequicksearchbox","com.android.calendar","com.facebook.appmanager","com.facebook.services","com.facebook.system","com.google.android.inputmethod.latin","com.google.android.music","com.google.android.videos","com.google.android.youtube","com.mi.android.globalFileexplorer","com.miui.analytics","com.miui.miservice","com.miui.calculator","com.miui.compass","com.miui.msa.global","com.miui.notes","com.miui.player","com.miui.fm","com.miui.huanji","com.mfashiongallery.emag","com.miui.personalassistant","com.android.email","com.google.android.inputmethod.latin"];
 Local $processPackage[33];
 Local $command = ""
+Local $sFileSelectFolder = ""
 
 #Region GUI MESSAGE LOOP
 GUISetState(@SW_SHOW)
@@ -351,7 +351,7 @@ EndIf
     Case $iExecuteButton
     For $i = 0 To UBound($processPackage) - 1
      If $processPackage[$i] Then
-		RunWait("adb shell pm " & $command & " -k --user 0 " & $i )
+		RunWait($sFileSelectFolder & "adb shell pm uninstall -k --user 0 " & $packageIds[$i] )
      GUICtrlSetData($iProgress, $i)
      EndIf
 
@@ -361,10 +361,10 @@ EndIf
  Case $iFileSelectButton
 	selectFolder()
 
- Case $install
-	if BitAND(GUICtrlRead($install), $GUI_CHECKED) = $GUI_CHECKED then
-                $command = "install"
-    EndIf
+ ;Case $install
+	;if BitAND(GUICtrlRead($install), $GUI_CHECKED) = $GUI_CHECKED then
+    ;            $command = "install"
+    ;EndIf
  Case $uninstall
 	if BitAND(GUICtrlRead($uninstall), $GUI_CHECKED) = $GUI_CHECKED then
     	$command = "uninstall"
@@ -390,11 +390,13 @@ Func selectFolder()
     ; Create a constant variable in Local scope of the message to display in FileSelectFolder.
     Local Const $sMessage = "Select a ADB folder"
     ; Display an open dialog to select a file.
-    Local $sFileSelectFolder = FileSelectFolder($sMessage, "")
+    $sFileSelectFolder = FileSelectFolder($sMessage, "")
     If @error Then
+	    $sFileSelectFolder = ""
         GUICtrlSetData($idCTRL_EdtScreen,"No folder was selected.")
     Else
         ; Display the selected folder.
+		 $sFileSelectFolder =  $sFileSelectFolder & "\"
 		    GUICtrlSetData($idCTRL_EdtScreen,$sFileSelectFolder)
 
     EndIf
