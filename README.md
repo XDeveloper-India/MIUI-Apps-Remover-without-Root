@@ -18,8 +18,8 @@ Process:
 1. Connect Device:
    Connect the phone to your computer via USB. Choose “File Transfer” mode instead of default “No data transfer”.
    
-2. Start the application and select the action you want to perform like Uninstall/install.
-3. Now you have to select the ADB path. Open the folder where you have extracted. Search for the directory containing adb.exe. Select that folder.
+2. Download and extract MIUI Apps remover.zip. Start the application.
+3. Now you have to select the ADB path. Open the folder where you have extracted the android platform tools. Search for the folder containing adb.exe and Select that folder.
 4. Now select the apps that you want to delete.
-5. Press Execute and Enjoy.
+5. Press Execute. Done!.
    
