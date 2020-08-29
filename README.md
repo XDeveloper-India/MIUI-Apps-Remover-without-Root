@@ -1,6 +1,8 @@
 # MIUI-Apps-Remover-without-Root
 A small Windows Utility to remove stupid MIUI apps from Xiaomi device without root permission.
 
+<img src="https://github.com/XDeveloper-India/MIUI-Apps-Remover-without-Root/raw/master/Snapshot/screenshot.png" height="523px" width="500px">
+
 WARNING: you should not uninstall or disable “Xiaomi Find Device” com.xiaomi.finddevice.
 On next reboot your phone will enter endless loop, and after some time it will ask to erase device and start over.
 
