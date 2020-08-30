@@ -14,13 +14,13 @@ prerequisite:
    Settings - Additional settings - Developer Options. Turn on USB debugging.
    
 2. Android Platform tools:
-   Download the tools from https://dl.google.com/android/repository/commandlinetools-win-6609375_latest.zip and Extract it.
+   Download the tools from https://developer.android.com/studio/releases/platform-tools and Extract it.
    
 Process:
 1. Connect Device:
    Connect the phone to your computer via USB. For first time, your device will ask to accept connection from your computer.
 2. Download and extract MIUI Apps remover.zip. Start the application.
-3. Now you have to select the ADB path. Open the folder where you have extracted the android platform tools. Search for the folder containing adb.exe and Select that folder.
+3. Now you have to select the ADB path. Select the folder where you have extracted the android platform tools and .
 4. Now select the apps that you want to delete.
 5. Press Execute. Done!.
    
