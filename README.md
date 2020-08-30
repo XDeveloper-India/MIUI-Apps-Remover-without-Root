@@ -19,7 +19,7 @@ prerequisite:
 Process:
 1. Connect Device:
    Connect the phone to your computer via USB. For first time, your device will ask to accept connection from your computer.
-2. Download and extract MIUI Apps remover.zip. Start the application.
+2. Download and extract MIUI Apps remover.zip from https://github.com/XDeveloper-India/MIUI-Apps-Remover-without-Root/raw/master/MIUI%20Apps%20remover.zip. Start the application.
 3. Now you have to select the ADB path. Select the folder where you have extracted the android platform tools and .
 4. Now select the apps that you want to delete.
 5. Press Execute. Done!.
