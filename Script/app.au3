@@ -374,7 +374,7 @@ EndIf
     Case $downloadUSBDriver
     ShellExecute("http://bigota.d.miui.com/tools/xiaomi_usb_driver.rar", "", "", "open")
 	Case $downloadADB
-    ShellExecute("https://dl.google.com/android/repository/commandlinetools-win-6609375_latest.zip", "", "", "open")
+    ShellExecute("https://developer.android.com/studio/releases/platform-tools", "", "", "open")
 	Case $help
     ShellExecute("https://github.com/XDeveloper-India/MIUI-Apps-Remover-without-Root", "", "", "open")
 	EndSwitch
